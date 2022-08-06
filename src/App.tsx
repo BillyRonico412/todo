@@ -29,7 +29,25 @@ const App = () => {
         } else {
             window.localStorage.setItem("tasks", "[]");
         }
+
+        const darkInLocalStorage = window.localStorage.getItem("dark");
+        console.log(darkInLocalStorage);
+        if (darkInLocalStorage !== null) {
+            setDark(darkInLocalStorage === "true");
+        }
     }, []);
+
+    useEffect(() => {
+        if (dark) {
+            (document.querySelector("html") as HTMLElement).classList.add(
+                "dark"
+            );
+        } else {
+            (document.querySelector("html") as HTMLElement).classList.remove(
+                "dark"
+            );
+        }
+    }, [dark]);
 
     const changeCompleted = (id: string) => () => {
         const indexTask = tasks.findIndex((task) => task.id === id);
@@ -37,6 +55,18 @@ const App = () => {
             const newTasks = [
                 ...tasks.slice(0, indexTask),
                 { ...tasks[indexTask], completed: !tasks[indexTask].completed },
+                ...tasks.slice(indexTask + 1),
+            ];
+            window.localStorage.setItem("tasks", JSON.stringify(newTasks));
+            setTasks(newTasks);
+        }
+    };
+
+    const deleteTasks = (id: string) => () => {
+        const indexTask = tasks.findIndex((task) => task.id === id);
+        if (indexTask >= 0) {
+            const newTasks = [
+                ...tasks.slice(0, indexTask),
                 ...tasks.slice(indexTask + 1),
             ];
             window.localStorage.setItem("tasks", JSON.stringify(newTasks));
@@ -62,17 +92,8 @@ const App = () => {
                 <button
                     className="ml-auto"
                     onClick={() => {
-                        if (dark) {
-                            (
-                                document.querySelector("html") as HTMLElement
-                            ).classList.remove("dark");
-                            setDark(false);
-                        } else {
-                            (
-                                document.querySelector("html") as HTMLElement
-                            ).classList.add("dark");
-                            setDark(true);
-                        }
+                        window.localStorage.setItem("dark", String(!dark));
+                        setDark(!dark);
                     }}
                 >
                     <FaSun />
@@ -90,6 +111,7 @@ const App = () => {
                             actionOnClickPlus();
                         }
                     }}
+                    placeholder="Add todo ..."
                 />
                 <button
                     className="bg-blue-600 px-4 rounded shadow text-white"
@@ -160,6 +182,7 @@ const App = () => {
                             <Task
                                 task={task}
                                 changeCompleted={changeCompleted(task.id)}
+                                deleteTask={deleteTasks(task.id)}
                             />
                         </li>
                     ))}
