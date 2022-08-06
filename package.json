@@ -1,4 +1,5 @@
 {
+  "homepage": "https://billyronico412.github.io/todo",
   "name": "todo-app",
   "private": true,
   "version": "0.0.0",
@@ -6,7 +7,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -21,6 +23,7 @@
     "@types/uuid": "^8.3.4",
     "@vitejs/plugin-react": "^2.0.0",
     "autoprefixer": "^10.4.8",
+    "gh-pages": "^4.0.0",
     "postcss": "^8.4.14",
     "tailwindcss": "^3.1.8",
     "typescript": "^4.6.4",
